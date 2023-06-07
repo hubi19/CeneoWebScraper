@@ -1,23 +1,26 @@
 from app import app
-from flask import Flask, render_template
+from flask import render_template, request, redirect, url_for
 
-@app.route("/name", defaults={'name': "Anonim"})
-@app.route("/name/<name>")
-def name(name):
-    return f"Hello {name}!"
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
-@app.route("/")
-def main():
-    return render_template('main.html')
+@app.route('/extract', methods=['GET', 'POST'])
+def extract():
+    if request.method == 'POST':
+        product_code = request.form.get('product_code')
+        return redirect(url_for('product', code=product_code))
+    return render_template('extract.html')
 
-@app.route("/author")
+@app.route('/products')
+def products():
+    return render_template('products.html')
+
+@app.route('/product/<code>')
+def product(code):
+    return render_template('product.html', product_code=code)
+
+@app.route('/author')
 def author():
     return render_template('author.html')
-
-@app.route("/extraction")
-def extraction():
-    return render_template('extraction.html')
-
-@app.route("/product_list")
-def product_list():
-    return render_template('product_list.html')
